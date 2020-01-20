@@ -2,7 +2,9 @@ package de.exxcellent.microservices.showcase.core.country.impl.persistence;
 
 import de.exxcellent.microservices.showcase.core.country.impl.persistence.model.CountryET;
 
+import javax.enterprise.context.ApplicationScoped;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -11,6 +13,7 @@ import java.util.Set;
  * @author Felix Riess
  * @since 20.01.20
  */
+@ApplicationScoped
 public class CountryRuntimeStorage implements CountryRepository {
     /**
      * a {@link Set} containing all known countries as {@link CountryET} during runtime.
@@ -26,13 +29,13 @@ public class CountryRuntimeStorage implements CountryRepository {
     }
 
     @Override
-    public Set<CountryET> getCountries() {
+    public Set<CountryET> findAll() {
         return this.countries;
     }
 
     @Override
-    public CountryET getCountry(final String shortName) {
-        throw new UnsupportedOperationException();
+    public Optional<CountryET> findByShortName(final String shortName) {
+        return this.countries.stream().filter(c -> shortName.equalsIgnoreCase(c.getShortName())).findFirst();
     }
 
     @Override
@@ -42,6 +45,11 @@ public class CountryRuntimeStorage implements CountryRepository {
     }
 
     private void initData() {
-        // TODO [FR] (20.01.2020): create some test data.
+        final CountryET germany = new CountryET("Germany", "GER");
+        final CountryET france = new CountryET("France", "FRA");
+        final CountryET scotland = new CountryET("Scotland", "SCO");
+        this.countries.add(germany);
+        this.countries.add(france);
+        this.countries.add(scotland);
     }
 }

@@ -2,6 +2,7 @@ package de.exxcellent.microservices.showcase.core.country.impl.persistence;
 
 import de.exxcellent.microservices.showcase.core.country.impl.persistence.model.CountryET;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -16,16 +17,15 @@ public interface CountryRepository {
      *
      * @return all countries as {@link Set} of {@link CountryET}s.
      */
-    Set<CountryET> getCountries();
+    Set<CountryET> findAll();
 
     /**
      * Get a country by its short name (ID).
      *
      * @param shortName the short name (ID) of the country to be returned (not {@code null}).
-     * @return the country with the provided short name as {@link CountryET}.
-     * @exception de.exxcellent.microservices.showcase.common.errorhandling.exception.BusinessException with {@link de.exxcellent.microservices.showcase.common.errorhandling.ErrorCode#NOT_FOUND_ERROR} if no country with the provided short name is existing.
+     * @return an {@link Optional} containing the country with the provided short name as {@link CountryET}.
      */
-    CountryET getCountry(final String shortName);
+    Optional<CountryET> findByShortName(final String shortName);
 
     /**
      * Adds the given country to the known countries.
