@@ -29,7 +29,9 @@ import java.util.Set;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class CountryFacade {
-    // TODO [FR] (21.01.2020): logging
+    /**
+     * The {@link Logger} for this {@link CountryFacade}.
+     */
     private static final Logger LOG = LoggerFactory.getLogger(CountryFacade.class);
 
     @Inject
@@ -43,6 +45,7 @@ public class CountryFacade {
      */
     @GET
     public Set<CountryTO> getCountries() {
+        LOG.info("Resource to get all countries triggered");
         Set<CountryTO> countries = this.countryService.getCountries();
         if(countries.isEmpty()) {
             throw new BusinessException(ErrorCode.EMPTY_LIST_ERROR, "No Countries are available");
@@ -62,6 +65,7 @@ public class CountryFacade {
     public CountryTO getCountry(@PathParam("shortName") final String shortName) {
         Preconditions.checkNotNull(shortName, "Country short name must not be null");
         Preconditions.checkStringLength(shortName, 3, "Country short name must have 3 characters");
+        LOG.info("Resource to get country with short name {} triggered", shortName);
         return this.countryService.getCountry(shortName);
     }
 
@@ -75,6 +79,7 @@ public class CountryFacade {
     @POST
     public Set<CountryTO> addCountry(final CountryTO country) {
         CountryValidation.validateCountryTO(country);
+        LOG.info("Resource to add country with name {} and short name {} triggered", country.getName(), country.getShortName());
         Set<CountryTO> countries = this.countryService.addCountry(country);
         if(countries.isEmpty()) {
             throw new BusinessException(ErrorCode.EMPTY_LIST_ERROR, "No Countries are available");

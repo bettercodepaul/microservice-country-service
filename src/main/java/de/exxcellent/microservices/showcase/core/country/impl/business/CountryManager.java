@@ -24,7 +24,9 @@ import java.util.Set;
 @ApplicationScoped
 @Transactional
 public class CountryManager implements CountryICI {
-    // TODO [FR] (21.01.2020): logging
+    /**
+     * The {@link Logger} for this {@link CountryManager}.
+     */
     private static final Logger LOG = LoggerFactory.getLogger(CountryManager.class);
 
     @Inject
@@ -32,6 +34,7 @@ public class CountryManager implements CountryICI {
 
     @Override
     public Set<CountryET> getCountries() {
+        LOG.info("Query storage to get all available countries");
         return this.countryRepository.findAll();
     }
 
@@ -39,6 +42,7 @@ public class CountryManager implements CountryICI {
     public CountryET getCountry(final String shortName) {
         Preconditions.checkNotNull(shortName, "Country short name must not be null");
         Preconditions.checkStringLength(shortName, 3, "Country short name must have 3 characters");
+        LOG.info("Query storage for country with short name {}", shortName);
         final Optional<CountryET> optionalCountry = this.countryRepository.findByShortName(shortName);
         if(optionalCountry.isPresent()) {
             return optionalCountry.get();
@@ -50,9 +54,11 @@ public class CountryManager implements CountryICI {
     @Override
     public Set<CountryET> addCountry(final CountryET country) {
         CountryValidation.validateCountryET(country);
+        LOG.info("Query storage for country with short name {} to avoid generating duplicates", country.getShortName());
         final Optional<CountryET> optionalCountryET = this.countryRepository.findByShortName(country.getShortName());
         if(optionalCountryET.isPresent()) {
             final CountryET existingCountry = optionalCountryET.get();
+            LOG.info("Country with short name {} is already existing in storage: {}", existingCountry.getShortName(), existingCountry.getName());
             if(!existingCountry.getName().equalsIgnoreCase(country.getName())) {
                 // another country with this short name is already existing. No more country with this short name can be created.
                 throw new BusinessException(ErrorCode.INVALID_ARGUMENT_ERROR, "A country with the short name "
@@ -60,6 +66,7 @@ public class CountryManager implements CountryICI {
                         + ". Cannot create two countries with the same short name");
             } // else: country is already existing and must not be added again.
         } else {
+            LOG.info("Adding new country {} with short name {} to storage", country.getName(), country.getShortName());
             // no country with the provided short name is present. Create a new one.
             this.countryRepository.addCountry(country);
         }
