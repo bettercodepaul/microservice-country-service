@@ -29,8 +29,12 @@ public class CountryManager implements CountryICI {
      */
     private static final Logger LOG = LoggerFactory.getLogger(CountryManager.class);
 
-    @Inject
     private CountryRepository countryRepository;
+
+    @Inject
+    CountryManager(final CountryRepository countryRepository) {
+        this.countryRepository = countryRepository;
+    }
 
     @Override
     public Set<CountryET> getCountries() {

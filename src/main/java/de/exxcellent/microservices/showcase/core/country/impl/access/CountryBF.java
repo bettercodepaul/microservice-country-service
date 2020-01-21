@@ -19,8 +19,12 @@ import java.util.stream.Collectors;
  */
 @ApplicationScoped
 public class CountryBF implements CountryBCI {
-    @Inject
     private CountryICI countryManager;
+
+    @Inject
+    CountryBF(final CountryICI countryManager) {
+        this.countryManager = countryManager;
+    }
 
     @Override
     public Set<CountryTO> getCountries() {

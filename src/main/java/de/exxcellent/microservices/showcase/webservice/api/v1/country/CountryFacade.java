@@ -34,8 +34,12 @@ public class CountryFacade {
      */
     private static final Logger LOG = LoggerFactory.getLogger(CountryFacade.class);
 
-    @Inject
     private CountryBCI countryService;
+
+    @Inject
+    CountryFacade(final CountryBCI countryService) {
+        this.countryService = countryService;
+    }
 
     /**
      * Get all available countries.
