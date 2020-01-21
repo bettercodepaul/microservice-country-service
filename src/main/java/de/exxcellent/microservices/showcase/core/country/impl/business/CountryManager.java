@@ -6,6 +6,8 @@ import de.exxcellent.microservices.showcase.common.validation.Preconditions;
 import de.exxcellent.microservices.showcase.core.country.impl.access.CountryValidation;
 import de.exxcellent.microservices.showcase.core.country.impl.persistence.CountryRepository;
 import de.exxcellent.microservices.showcase.core.country.impl.persistence.model.CountryET;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -22,6 +24,8 @@ import java.util.Set;
 @ApplicationScoped
 @Transactional
 public class CountryManager implements CountryICI {
+    // TODO [FR] (21.01.2020): logging
+    private static final Logger LOG = LoggerFactory.getLogger(CountryManager.class);
 
     @Inject
     private CountryRepository countryRepository;
@@ -34,6 +38,7 @@ public class CountryManager implements CountryICI {
     @Override
     public CountryET getCountry(final String shortName) {
         Preconditions.checkNotNull(shortName, "Country short name must not be null");
+        Preconditions.checkStringLength(shortName, 3, "Country short name must have 3 characters");
         final Optional<CountryET> optionalCountry = this.countryRepository.findByShortName(shortName);
         if(optionalCountry.isPresent()) {
             return optionalCountry.get();

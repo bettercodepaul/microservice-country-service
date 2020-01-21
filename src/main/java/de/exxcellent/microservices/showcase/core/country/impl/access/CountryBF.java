@@ -5,6 +5,8 @@ import de.exxcellent.microservices.showcase.core.country.api.CountryBCI;
 import de.exxcellent.microservices.showcase.core.country.api.types.CountryTO;
 import de.exxcellent.microservices.showcase.core.country.impl.business.CountryICI;
 import de.exxcellent.microservices.showcase.core.country.impl.persistence.model.CountryET;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -19,6 +21,8 @@ import java.util.stream.Collectors;
  */
 @ApplicationScoped
 public class CountryBF implements CountryBCI {
+    // TODO [FR] (21.01.2020): logging
+    private static final Logger LOG = LoggerFactory.getLogger(CountryBF.class);
 
     @Inject
     private CountryICI countryManager;
@@ -31,6 +35,7 @@ public class CountryBF implements CountryBCI {
     @Override
     public CountryTO getCountry(final String shortName) {
         Preconditions.checkNotNull(shortName, "Country short name must not be null");
+        Preconditions.checkStringLength(shortName, 3, "Country short name must have 3 characters");
         return CountryMapper.toTO(this.countryManager.getCountry(shortName));
     }
 

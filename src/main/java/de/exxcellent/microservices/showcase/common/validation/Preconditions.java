@@ -35,6 +35,19 @@ public final class Preconditions {
     }
 
     /**
+     * Check if given reference string has the given length. Call {@link #fail(String)} with the provided message if reference string is shorter or longer.
+     *
+     * @param reference the reference string to have the given length.
+     * @param length the target length of the reference string.
+     * @param errorMessage te error message to use if reference string has another length.
+     */
+    public static void checkStringLength(final String reference, final int length, final String errorMessage) {
+        if(reference.length() != length) {
+            fail(errorMessage);
+        }
+    }
+
+    /**
      * Fail with the provided message.
      *
      * @param message the message to be thrown as {@link BusinessException}.

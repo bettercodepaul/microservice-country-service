@@ -17,6 +17,7 @@ public final class CountryValidation {
     private static final String COUNTRY_NOT_NULL = "Country must not be null";
     private static final String COUNTRY_NAME_NOT_NULL = "Country name must not be null";
     private static final String COUNTRY_SHORT_NAME_NOT_NULL = "Country short name must not be null";
+    private static final String COUNTRY_SHORT_NAME_LENGTH = "Country short name must have 3 characters";
 
     /**
      * private constructor to hide implicit public one.
@@ -42,6 +43,7 @@ public final class CountryValidation {
         Preconditions.checkNotNull(country, COUNTRY_NOT_NULL);
         Preconditions.checkNotNull(country.getName(), COUNTRY_NAME_NOT_NULL);
         Preconditions.checkNotNull(country.getShortName(), COUNTRY_SHORT_NAME_NOT_NULL);
+        Preconditions.checkStringLength(country.getShortName(), 3, COUNTRY_SHORT_NAME_LENGTH);
     }
 
     /**
@@ -60,5 +62,6 @@ public final class CountryValidation {
         Preconditions.checkNotNull(country, COUNTRY_NOT_NULL);
         Preconditions.checkNotNull(country.getName(), COUNTRY_NAME_NOT_NULL);
         Preconditions.checkNotNull(country.getShortName(), COUNTRY_SHORT_NAME_NOT_NULL);
+        Preconditions.checkStringLength(country.getShortName(), 3, COUNTRY_SHORT_NAME_LENGTH);
     }
 }

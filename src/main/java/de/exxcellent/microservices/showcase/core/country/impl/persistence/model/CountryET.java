@@ -16,12 +16,25 @@ public class CountryET implements Serializable {
      * generated serialVersionUID
      */
     private static final long serialVersionUID = -189837735120827056L;
+    /**
+     * the name of this {@link CountryET}.
+     */
     private final String name;
+    /**
+     * the short name (ID) of this {@link CountryET}. (3 characters).
+     */
     private final String shortName;
 
+    /**
+     * Constructor.
+     *
+     * @param name name of the country. (not {@code null}).
+     * @param shortName the short name (ID) of the country (3 characters long, not {@code null}).
+     */
     public CountryET(final String name, final String shortName) {
         Preconditions.checkNotNull(name, "Country name must not be null");
         Preconditions.checkNotNull(shortName, "Country short name must not be null");
+        Preconditions.checkStringLength(shortName, 3, "Country short name must have 3 characters");
         this.name = name;
         this.shortName = shortName;
     }

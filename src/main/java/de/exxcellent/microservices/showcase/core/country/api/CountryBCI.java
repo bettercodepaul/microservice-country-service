@@ -21,7 +21,7 @@ public interface CountryBCI {
     /**
      * Get a country by its short name (ID).
      *
-     * @param shortName the short name of the country to be returned (not {@code null}).
+     * @param shortName the short name of the country to be returned (3 characters, not {@code null}).
      * @return the country with the provided short name as {@link CountryTO}.
      * @exception de.exxcellent.microservices.showcase.common.errorhandling.exception.BusinessException with {@link de.exxcellent.microservices.showcase.common.errorhandling.ErrorCode#NOT_FOUND_ERROR} if no country with the provided short name is existing.
      */

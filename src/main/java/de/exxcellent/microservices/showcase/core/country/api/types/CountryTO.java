@@ -21,7 +21,7 @@ public class CountryTO implements Serializable {
      */
     private String name;
     /**
-     * the short name (ID) of the country.
+     * the short name (ID) of the country. (exact 3 characters).
      */
     private String shortName;
 
@@ -41,6 +41,7 @@ public class CountryTO implements Serializable {
     public CountryTO(final String name, final String shortName) {
         Preconditions.checkNotNull(name, "Country name must not be null");
         Preconditions.checkNotNull(shortName, "Country short name must not be null");
+        Preconditions.checkStringLength(shortName, 3, "Country short name must have 3 characters");
         this.name = name;
         this.shortName = shortName;
     }
@@ -80,6 +81,7 @@ public class CountryTO implements Serializable {
      */
     public void setShortName(final String shortName) {
         Preconditions.checkNotNull(shortName, "Country short name must not be null");
+        Preconditions.checkStringLength(shortName, 3, "Country short name must have 3 characters");
         this.shortName = shortName;
     }
 }
