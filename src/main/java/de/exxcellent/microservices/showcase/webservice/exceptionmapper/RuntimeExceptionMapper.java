@@ -3,6 +3,7 @@ package de.exxcellent.microservices.showcase.webservice.exceptionmapper;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
  * Maps {@link RuntimeException}s to HTTP responses.
@@ -10,6 +11,7 @@ import javax.ws.rs.ext.ExceptionMapper;
  * @author Felix Riess, eXXcellent solutions consulting & software gmbh
  * @since 21.01.2020
  */
+@Provider
 public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException> {
 
     @Override
