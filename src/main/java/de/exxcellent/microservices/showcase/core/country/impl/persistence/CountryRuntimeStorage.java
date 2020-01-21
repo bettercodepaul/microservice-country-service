@@ -1,5 +1,7 @@
 package de.exxcellent.microservices.showcase.core.country.impl.persistence;
 
+import de.exxcellent.microservices.showcase.common.validation.Preconditions;
+import de.exxcellent.microservices.showcase.core.country.impl.access.CountryValidation;
 import de.exxcellent.microservices.showcase.core.country.impl.persistence.model.CountryET;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -35,11 +37,13 @@ public class CountryRuntimeStorage implements CountryRepository {
 
     @Override
     public Optional<CountryET> findByShortName(final String shortName) {
+        Preconditions.checkNotNull(shortName, "Country short name must not be null");
         return this.countries.stream().filter(c -> shortName.equalsIgnoreCase(c.getShortName())).findFirst();
     }
 
     @Override
     public Set<CountryET> addCountry(final CountryET country) {
+        CountryValidation.validateCountryET(country);
         this.countries.add(country);
         return this.countries;
     }

@@ -84,4 +84,12 @@ public class CountryTO implements Serializable {
         Preconditions.checkStringLength(shortName, 3, "Country short name must have 3 characters");
         this.shortName = shortName;
     }
+
+    @Override
+    public String toString() {
+        return "CountryTO{" +
+                        "name='" + this.name + '\'' +
+                        ", shortName='" + this.shortName + '\'' +
+                        '}';
+    }
 }

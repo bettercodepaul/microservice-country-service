@@ -78,17 +78,11 @@ public class CountryFacade {
      *
      * @param country the country to be added as {@link CountryTO}. (must be valid, see {@link CountryValidation#validateCountryTO(CountryTO)}).
      * @return all available countries including the new one as {@link Set} of {@link CountryTO}s.
-     * @exception BusinessException with {@link ErrorCode#EMPTY_LIST_ERROR} if no countries are available to produce HTTP 204.
      */
     @POST
     public Set<CountryTO> addCountry(final CountryTO country) {
         CountryValidation.validateCountryTO(country);
         LOG.info("Resource to add country with name {} and short name {} triggered", country.getName(), country.getShortName());
-        Set<CountryTO> countries = this.countryService.addCountry(country);
-        if(countries.isEmpty()) {
-            throw new BusinessException(ErrorCode.EMPTY_LIST_ERROR, "No Countries are available");
-        } else {
-            return countries;
-        }
+        return this.countryService.addCountry(country);
     }
 }

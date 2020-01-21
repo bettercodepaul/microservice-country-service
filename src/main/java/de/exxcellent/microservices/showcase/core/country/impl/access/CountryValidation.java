@@ -36,6 +36,7 @@ public final class CountryValidation {
      *     <li>{@link CountryTO#getName()}</li>
      *     <li>{@link CountryTO#getShortName()}</li>
      * </ol>
+     * Furthermore {@link CountryTO#getShortName()} must have length 3.
      *
      * @param country the country to be validated as {@link CountryTO}.
      */
@@ -55,6 +56,7 @@ public final class CountryValidation {
      *     <li>{@link CountryET#getName()}</li>
      *     <li>{@link CountryET#getShortName()}</li>
      * </ol>
+     * Furthermore {@link CountryET#getShortName()} must have length 3.
      *
      * @param country the country to be validated as {@link CountryET}.
      */
