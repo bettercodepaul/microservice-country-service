@@ -72,13 +72,12 @@ public class CurrencyServiceClient implements CurrencyESI {
         Preconditions.checkStringLength(countryWithCurrency.getCurrency().getShortName(), 3, "Currency short name must have 3 characters");
         Preconditions.checkNotNull(countryWithCurrency.getCurrency().getName(), "Currency name must not be null");
         LOG.info("Calling currency service to create mapping of country {} with currency {}", countryWithCurrency.getCountryShortName(), countryWithCurrency.getCurrency().getName());
-        try(final Response response = this.currencyService.createCountryWithCurrency(countryWithCurrency)) {
-            if(response.getStatus() == 200) {
-                return new HashSet<>(Arrays.asList(response.readEntity(CountryWithCurrencyCTO[].class)));
-            } else {
-                // 4xx and 5xx responses are forwarded by the framework, so we should never run in this else block.
-                throw new TechnicalException(ErrorCode.INTERNAL_ERROR, "Application reached an unstable state at: CurrencyServiceClient.CreateCountryWithCurrency. Please contact 3rd level support");
-            }
+        final Response response = this.currencyService.createCountryWithCurrency(countryWithCurrency);
+        if(response.getStatus() == 200) {
+            return new HashSet<>(Arrays.asList(response.readEntity(CountryWithCurrencyCTO[].class)));
+        } else {
+            // 4xx and 5xx responses are forwarded by the framework, so we should never run in this else block.
+            throw new TechnicalException(ErrorCode.INTERNAL_ERROR, "Application reached an unstable state at: CurrencyServiceClient.CreateCountryWithCurrency. Please contact 3rd level support");
         }
     }
 
