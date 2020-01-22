@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  */
 @ApplicationScoped
 public class CountryBF implements CountryBCI {
-    private CountryICI countryManager;
+    private final CountryICI countryManager;
 
     @Inject
     CountryBF(final CountryICI countryManager) {

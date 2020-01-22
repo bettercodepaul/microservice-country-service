@@ -29,7 +29,7 @@ public class CountryManager implements CountryICI {
      */
     private static final Logger LOG = LoggerFactory.getLogger(CountryManager.class);
 
-    private CountryRepository countryRepository;
+    private final CountryRepository countryRepository;
 
     @Inject
     CountryManager(final CountryRepository countryRepository) {

@@ -34,7 +34,7 @@ public class CountryFacade {
      */
     private static final Logger LOG = LoggerFactory.getLogger(CountryFacade.class);
 
-    private CountryBCI countryService;
+    private final CountryBCI countryService;
 
     @Inject
     CountryFacade(final CountryBCI countryService) {
