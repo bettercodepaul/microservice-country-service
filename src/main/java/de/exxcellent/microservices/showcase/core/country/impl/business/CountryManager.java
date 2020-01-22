@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.Set;
 
@@ -22,7 +21,6 @@ import java.util.Set;
  * @since 20.01.20
  */
 @ApplicationScoped
-@Transactional
 public class CountryManager implements CountryICI {
     /**
      * The {@link Logger} for this {@link CountryManager}.
