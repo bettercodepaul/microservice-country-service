@@ -6,6 +6,8 @@ import de.exxcellent.microservices.showcase.common.validation.Preconditions;
 import de.exxcellent.microservices.showcase.core.currency.api.CurrencyESI;
 import de.exxcellent.microservices.showcase.core.currency.api.types.CountryWithCurrencyCTO;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -23,6 +25,10 @@ import java.util.Set;
  */
 @ApplicationScoped
 public class CurrencyServiceClient implements CurrencyESI {
+    /**
+     * The {@link Logger} of this {@link CurrencyServiceClient}.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(CurrencyServiceClient.class);
 
     @Inject
     @RestClient
@@ -30,6 +36,7 @@ public class CurrencyServiceClient implements CurrencyESI {
 
     @Override
     public Set<CountryWithCurrencyCTO> getCountriesWithCurrency() {
+        LOG.info("Calling currency service to get all countries with their currency");
         final Response response = this.currencyService.getCountriesWithCurrency();
         if(response.getStatus() == 200) {
             return new HashSet<>(Arrays.asList(response.readEntity(CountryWithCurrencyCTO[].class)));
@@ -45,6 +52,7 @@ public class CurrencyServiceClient implements CurrencyESI {
     public CountryWithCurrencyCTO getCountryWithCurrency(final String countryShortName) {
         Preconditions.checkNotNull(countryShortName, "Country short name must not be null");
         Preconditions.checkStringLength(countryShortName, 3, "Country short name must have 3 characters");
+        LOG.info("Calling currency service to get currency of country with short name {}", countryShortName);
         final Response response = this.currencyService.getCountryWithCurrency(countryShortName);
         if(response.getStatus() == 200) {
             return response.readEntity(CountryWithCurrencyCTO.class);
@@ -63,12 +71,14 @@ public class CurrencyServiceClient implements CurrencyESI {
         Preconditions.checkNotNull(countryWithCurrency.getCurrency().getShortName(), "Currency short name must not be null");
         Preconditions.checkStringLength(countryWithCurrency.getCurrency().getShortName(), 3, "Currency short name must have 3 characters");
         Preconditions.checkNotNull(countryWithCurrency.getCurrency().getName(), "Currency name must not be null");
-        final Response response = this.currencyService.createCountryWithCurrency(countryWithCurrency);
-        if(response.getStatus() == 200) {
-            return new HashSet<>(Arrays.asList(response.readEntity(CountryWithCurrencyCTO[].class)));
-        } else {
-            // 4xx and 5xx responses are forwarded by the framework, so we should never run in this else block.
-            throw new TechnicalException(ErrorCode.INTERNAL_ERROR, "Application reached an unstable state at: CurrencyServiceClient.CreateCountryWithCurrency. Please contact 3rd level support");
+        LOG.info("Calling currency service to create mapping of country {} with currency {}", countryWithCurrency.getCountryShortName(), countryWithCurrency.getCurrency().getName());
+        try(final Response response = this.currencyService.createCountryWithCurrency(countryWithCurrency)) {
+            if(response.getStatus() == 200) {
+                return new HashSet<>(Arrays.asList(response.readEntity(CountryWithCurrencyCTO[].class)));
+            } else {
+                // 4xx and 5xx responses are forwarded by the framework, so we should never run in this else block.
+                throw new TechnicalException(ErrorCode.INTERNAL_ERROR, "Application reached an unstable state at: CurrencyServiceClient.CreateCountryWithCurrency. Please contact 3rd level support");
+            }
         }
     }
 
