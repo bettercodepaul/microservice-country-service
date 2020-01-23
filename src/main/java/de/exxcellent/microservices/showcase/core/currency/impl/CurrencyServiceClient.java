@@ -37,7 +37,10 @@ public class CurrencyServiceClient implements CurrencyESI {
     @Override
     public Set<CountryWithCurrencyCTO> getCountriesWithCurrency() {
         LOG.info("Calling currency service to get all countries with their currency");
+        final long startTime = System.currentTimeMillis();
         final Response response = this.currencyService.getCountriesWithCurrency();
+        final long durationInMillis = System.currentTimeMillis() - startTime;
+        LOG.info("Call to currency service to get all countries with their currency took {} ms", durationInMillis);
         if(response.getStatus() == 200) {
             return new HashSet<>(Arrays.asList(response.readEntity(CountryWithCurrencyCTO[].class)));
         } else if (response.getStatus() == 204){
@@ -53,7 +56,10 @@ public class CurrencyServiceClient implements CurrencyESI {
         Preconditions.checkNotNull(countryShortName, "Country short name must not be null");
         Preconditions.checkStringLength(countryShortName, 3, "Country short name must have 3 characters");
         LOG.info("Calling currency service to get currency of country with short name {}", countryShortName);
+        final long startTime = System.currentTimeMillis();
         final Response response = this.currencyService.getCountryWithCurrency(countryShortName);
+        final long durationInMillis = System.currentTimeMillis() - startTime;
+        LOG.info("Call to currency service to get currency of country {} took {} ms", countryShortName, durationInMillis);
         if(response.getStatus() == 200) {
             return response.readEntity(CountryWithCurrencyCTO.class);
         } else {
@@ -72,12 +78,16 @@ public class CurrencyServiceClient implements CurrencyESI {
         Preconditions.checkStringLength(countryWithCurrency.getCurrency().getShortName(), 3, "Currency short name must have 3 characters");
         Preconditions.checkNotNull(countryWithCurrency.getCurrency().getName(), "Currency name must not be null");
         LOG.info("Calling currency service to create mapping of country {} with currency {}", countryWithCurrency.getCountryShortName(), countryWithCurrency.getCurrency().getName());
-        final Response response = this.currencyService.createCountryWithCurrency(countryWithCurrency);
-        if(response.getStatus() == 200) {
-            return new HashSet<>(Arrays.asList(response.readEntity(CountryWithCurrencyCTO[].class)));
-        } else {
-            // 4xx and 5xx responses are forwarded by the framework, so we should never run in this else block.
-            throw new TechnicalException(ErrorCode.INTERNAL_ERROR, "Application reached an unstable state at: CurrencyServiceClient.CreateCountryWithCurrency. Please contact 3rd level support");
+        final long startTime = System.currentTimeMillis();
+        try(final Response response = this.currencyService.createCountryWithCurrency(countryWithCurrency)) {
+            final long durationInMillis = System.currentTimeMillis() - startTime;
+            LOG.info("Call to currency service to create mapping of country {} with currency {} took {} ms", countryWithCurrency.getCountryShortName(), countryWithCurrency.getCurrency().getName(), durationInMillis);
+            if(response.getStatus() == 200) {
+                return new HashSet<>(Arrays.asList(response.readEntity(CountryWithCurrencyCTO[].class)));
+            } else {
+                // 4xx and 5xx responses are forwarded by the framework, so we should never run in this else block.
+                throw new TechnicalException(ErrorCode.INTERNAL_ERROR, "Application reached an unstable state at: CurrencyServiceClient.CreateCountryWithCurrency. Please contact 3rd level support");
+            }
         }
     }
 

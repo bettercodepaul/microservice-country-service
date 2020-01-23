@@ -1,6 +1,7 @@
 package de.exxcellent.microservices.showcase.core.country.api;
 
 import de.exxcellent.microservices.showcase.core.country.api.types.CountryTO;
+import de.exxcellent.microservices.showcase.core.country.api.types.CountryWithLanguageAndCurrencyCTO;
 
 import java.util.Set;
 
@@ -35,4 +36,18 @@ public interface CountryBCI {
      * @return all countries including the added country as {@link Set} of {@link CountryTO}s.
      */
     Set<CountryTO> addCountry(final CountryTO country);
+
+    /**
+     * Get all countries with their language and currency.
+     *
+     * @return a {@link Set} containing all countries with their language and currency.
+     */
+    Set<CountryWithLanguageAndCurrencyCTO> getCountriesWithLanguageAndCurrency();
+
+    /**
+     * Adds the provided country with its language and currency.
+     *
+     * @param countryWithLanguageAndCurrency the country with its information to add as {@link CountryWithLanguageAndCurrencyCTO}.
+     */
+    void addCountryWithLanguageAndCurrency(final CountryWithLanguageAndCurrencyCTO countryWithLanguageAndCurrency);
 }

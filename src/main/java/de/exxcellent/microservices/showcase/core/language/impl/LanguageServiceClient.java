@@ -37,7 +37,10 @@ public class LanguageServiceClient implements LanguageESI {
     @Override
     public Set<CountryWithLanguageCTO> getCountriesWithLanguage() {
         LOG.info("Calling language service to get all countries with their language");
+        final long startTime = System.currentTimeMillis();
         final Response response = this.languageService.getCountriesWithLanguage();
+        final long durationInMillis = System.currentTimeMillis() - startTime;
+        LOG.info("Call to language service to get all countries with their language took {}ms", durationInMillis);
         if(response.getStatus() == 200) {
             return new HashSet<>(Arrays.asList(response.readEntity(CountryWithLanguageCTO[].class)));
         } else if(response.getStatus() == 204) {
@@ -53,7 +56,10 @@ public class LanguageServiceClient implements LanguageESI {
         Preconditions.checkNotNull(countryShortName, "Country short name must not be null");
         Preconditions.checkStringLength(countryShortName, 3, "Country short name must have 3 characters");
         LOG.info("Calling language service to get language of country with short name {}", countryShortName);
+        final long startTime = System.currentTimeMillis();
         final Response response = this.languageService.getCountryWithLanguage(countryShortName);
+        final long durationInMillis = System.currentTimeMillis() - startTime;
+        LOG.info("Call to language service to get language of country {} took {}ms", countryShortName, durationInMillis);
         if(response.getStatus() == 200) {
             return response.readEntity(CountryWithLanguageCTO.class);
         } else {
@@ -72,12 +78,16 @@ public class LanguageServiceClient implements LanguageESI {
         Preconditions.checkNotNull(countryWithLanguage.getLanguage().getName(), "Language name must not be null");
         Preconditions.checkStringLength(countryWithLanguage.getLanguage().getShortName(), 3, "Language short name must have 3 characters");
         LOG.info("Calling language service to create mapping of country {} and language {}", countryWithLanguage.getCountryShortName(), countryWithLanguage.getLanguage().getName());
-        final Response response = this.languageService.createCountryWithLanguage(countryWithLanguage);
-        if(response.getStatus() == 200) {
-            return new HashSet<>(Arrays.asList(response.readEntity(CountryWithLanguageCTO[].class)));
-        } else {
-            // 4xx and 5xx responses are forwarded by the framework, so we should never run in this else block.
-            throw new TechnicalException(ErrorCode.INTERNAL_ERROR, "Application reached an unstable state at: LanguageServiceClient.CreateCountryWithLanguage. Please contact 3rd level support");
+        final long startTime = System.currentTimeMillis();
+        try(final Response response = this.languageService.createCountryWithLanguage(countryWithLanguage)) {
+            final long durationInMillis = System.currentTimeMillis() - startTime;
+            LOG.info("Call to language service to create mapping of country {} and language {} took {}ms", countryWithLanguage.getCountryShortName(), countryWithLanguage.getLanguage().getName(), durationInMillis);
+            if(response.getStatus() == 200) {
+                return new HashSet<>(Arrays.asList(response.readEntity(CountryWithLanguageCTO[].class)));
+            } else {
+                // 4xx and 5xx responses are forwarded by the framework, so we should never run in this else block.
+                throw new TechnicalException(ErrorCode.INTERNAL_ERROR, "Application reached an unstable state at: LanguageServiceClient.CreateCountryWithLanguage. Please contact 3rd level support");
+            }
         }
     }
 }
