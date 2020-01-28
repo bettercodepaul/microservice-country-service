@@ -33,8 +33,8 @@ RUN adduser -G root --no-create-home --disabled-password 1001 \
   && chmod -R "g+rwX" /deployments \
   && chown -R 1001:root /deployments
 
-COPY target/lib/* /deployments/lib/
-COPY target/*-runner.jar /deployments/app.jar
+COPY --from=maven target/lib/* /deployments/lib/
+COPY --from=maven target/*-runner.jar /deployments/app.jar
 EXPOSE 8080
 
 # run with user 1001
